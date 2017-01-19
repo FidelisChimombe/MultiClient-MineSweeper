@@ -1,5 +1,11 @@
 package minesweeper;
 
+/*
+ * Board data type, represents the board in Mine Sweeper game
+ * 
+ * Thread safety Argument
+ * The datatype is thread-safe it uses implicit locks on methods that write a shared resource.
+ */
 public class Board {
 	
 	private final int N;
@@ -33,6 +39,11 @@ public class Board {
 		return this.board;
 	}
 	
+	 /* counts the number of neighbors a square has
+	  * @param x, an int representing the x coordinate of a square
+	  * @param y, an int representing the x coordinate of a square
+	  * @return , a string which is the current board representation
+	  */
 	public int getNeighborsWithBomb(int x,int y){
 		int neighbors=0;
 		for(int i=-1;i<2;i++){
@@ -52,6 +63,9 @@ public class Board {
 		return neighbors;
 	}
 	
+	/*
+	 * prints the string representation of the current state of the board.
+	 */
 	public synchronized String look(){
 		String current_state="";
 		for(int i=0;i<this.getBoardSize();i++){
@@ -74,7 +88,11 @@ public class Board {
 		return current_state;
 	}
 	
-	//check for bomb before digging.
+	/* digs a given square
+	 *  @param x, an int representing the x coordinate of a square
+	 * @param y, an int representing the x coordinate of a square
+	 * @return , a string which is the current board representation
+	 */
 	public synchronized void dig(int x,int y){
 		if((x>=0 && x<this.getBoardSize()) && (y>=0 && y<this.getBoardSize())){
 			if(this.board[x][y].getState()=="untouched" && this.getNeighborsWithBomb(x, y)!=0){
@@ -85,8 +103,13 @@ public class Board {
 		
 	}
 	
-	//recursive digging, when there is no bomb in a square, and the square is not surrounded by no bombs
-	//put some logic on the server
+	/*
+	 *recursive digging, when there is no bomb in a square, and the square is not surrounded by no bombs
+	 * @param x, an int representing the x coordinate of a square
+	 * @param y, an int representing the x coordinate of a square
+	 * @return , a string which is the current board representation
+	 */
+	 
 	public synchronized void recursiveDig(int x,int y){
 		//dig doesn't need to send a message to the client if they did a bomb, i should check 
 		//recursive in the case when non of the neighbors
@@ -109,7 +132,12 @@ public class Board {
 	}
 	
 
-	
+	/*
+	 * flags a square when given x,y coordinates
+	 * @param x, an int representing the x coordinate of a square
+	 * @param y, an int representing the x coordinate of a square
+	 * @return , a string which is the current board representation
+	 */
 	public synchronized String flag(int x,int y){
 		if((x>=0 && x<this.getBoardSize()) && (y>=0 && y<this.getBoardSize())){
 			if(this.board[x][y].getState()=="untouched"){
@@ -120,6 +148,12 @@ public class Board {
 		return look();
 	}
 	
+	/*
+	 * deflags a square when given x,y coordinates
+	 * @param x, an int representing the x coordinate of a square
+	 * @param y, an int representing the x coordinate of a square
+	 * @return , a string which is the current board representation
+	 */
 	public synchronized String deflag(int x, int y){
 		if((x>=0 && x<this.getBoardSize()) && (y>=0 && y<this.getBoardSize())){
 			if(this.board[x][y].getState()=="flagged"){
@@ -129,7 +163,9 @@ public class Board {
 		
 		return look();
 	}
-	
+	/*
+	 * @return, a string which contains help commands
+	 */
 	public String help_request(){
 		String help_message="Here are the messages you can send to the server\n"+
 							"LOOK :=="+ "'look'\n"+

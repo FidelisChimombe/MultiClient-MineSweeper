@@ -1,8 +1,6 @@
 package minesweeper;
 
 public class Square {
-
-	
 	private int X;
 	private int Y;
 	private String state;
